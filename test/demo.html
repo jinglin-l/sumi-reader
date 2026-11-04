@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- Demo page for the README screenshot: original text, deliberately low-contrast styling (pale
+     grey on grey, thin tiny type) so the before/after is obvious. No external images, so the
+     render has no broken placeholders. -->
+<html><head><meta charset="utf-8"><title>How screen contrast is measured | Field Notes</title>
+<meta name="author" content="Field Notes">
+<meta property="article:published_time" content="2026-10-30T09:00:00Z">
+<style>body{background:#8a8a8a;color:#9a9a9a;font:200 11px/1.2 Georgia}h1,h2,h3{color:#a0a0a0;font-weight:200}</style>
+</head><body>
+<nav>home · archive · subscribe</nav>
+<article>
+<h1>How screen contrast is measured</h1>
+<p>Every colour on a screen has a relative luminance, a number between 0 for pure black and 1 for pure white that reflects how bright the colour looks to a human eye. Contrast ratio compares two of those numbers: add 0.05 to each, then divide the lighter by the darker. Black on white scores 21:1, the maximum, and two identical colours score 1:1.</p>
+<p>The Web Content Accessibility Guidelines ask for at least 4.5:1 for body text and 3:1 for large headings. Plenty of sites fall well short, usually because pale grey text on an off-white background looks calm in a design mockup.</p>
+<h2>Why green counts the most</h2>
+<p>Luminance is not a plain average of red, green and blue. Each channel is first converted from its stored sRGB value into linear light, then weighted by how sensitive the eye is to it. Green dominates the sum, which is why a mid green reads much brighter than a mid blue at the same numeric value.</p>
+<pre><code>L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+ratio = (L_lighter + 0.05) / (L_darker + 0.05)</code></pre>
+<h3>A worked example</h3>
+<p>Grey <code>#9a9a9a</code> has a luminance of about 0.32, and grey <code>#8a8a8a</code> about 0.25. Their ratio is (0.32 + 0.05) / (0.25 + 0.05), roughly 1.2:1, which is why text in those colours is close to invisible.</p>
+<table><tr><th>text on background</th><th>ratio</th><th>passes 4.5:1</th></tr>
+<tr><td>#9a9a9a on #8a8a8a</td><td>1.2</td><td>no</td></tr>
+<tr><td>#767676 on #ffffff</td><td>4.5</td><td>just</td></tr>
+<tr><td>#2b2b2b on #faf8f8</td><td>13.4</td><td>yes</td></tr></table>
+<h2>Thin fonts make it worse</h2>
+<p>The ratio only describes colour. A hairline font weight at a small size covers so few pixels that anti-aliasing blends each stroke into the background, so the colour you actually see is lighter than the one in the stylesheet. Heavier weights and larger sizes keep the measured ratio honest.</p>
+<blockquote>A ratio that passes on paper can still fail on screen once thin strokes are smoothed into the page.</blockquote>
+<h2>What a fix looks like</h2>
+<p>Darken the text or lighten the background until the ratio clears 4.5:1, use a regular or medium weight for body copy, and keep line length near 70 characters. None of this changes the content, only whether you can read it.</p>
+</article>
+<footer>© 2026 field notes · terms</footer>
+</body></html>
