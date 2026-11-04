@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <!-- Toolbar icon: an off-white page with slate-blue text lines, the sumi palette in miniature. -->
+  <rect x="6" y="4" width="36" height="40" rx="5" fill="#faf8f8" stroke="#284b63" stroke-width="3"/>
+  <rect x="13" y="13" width="22" height="4" rx="2" fill="#284b63"/>
+  <rect x="13" y="22" width="22" height="2.5" rx="1.25" fill="#4e4e4e"/>
+  <rect x="13" y="28" width="22" height="2.5" rx="1.25" fill="#4e4e4e"/>
+  <rect x="13" y="34" width="14" height="2.5" rx="1.25" fill="#4e4e4e"/>
+</svg>

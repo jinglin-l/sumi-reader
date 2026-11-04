@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- Test harness: the real reader.html markup, plus a fake `browser.storage.session` that reads
+     the article test/run puts in localStorage, so reader.js can run in a normal tab. -->
+<html lang="en"><head><meta charset="utf-8"><title>Sumi Reader</title>
+<link rel="stylesheet" href="../reader.css"></head><body>
+
+  <div id="sr-root">
+    <main id="sr-center">
+      <nav class="sr-crumbs">
+        <a id="sr-back" href="#">← back to page</a>
+        <span class="sr-sep">/</span>
+        <a id="sr-site" href="#"></a>
+      </nav>
+      <article id="sr-article">
+        <header>
+          <h1 id="sr-title"></h1>
+          <p class="sr-meta" id="sr-meta"></p>
+        </header>
+        <div id="sr-content"></div>
+      </article>
+    </main>
+    <aside id="sr-right">
+      <div class="sr-toc-box">
+        <h3>Table of Contents</h3>
+        <ol id="sr-toc"></ol>
+      </div>
+    </aside>
+  </div>
+  
+<script>
+window.browser = { storage: { session: { get: async (k) => ({ [k]: JSON.parse(localStorage.getItem("article")) }) } } };
+</script>
+<script src="../reader.js"></script>
+</body></html>

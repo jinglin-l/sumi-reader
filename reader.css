@@ -1,0 +1,161 @@
+/*
+ * Sumi Reader theme.
+ *
+ * A trimmed copy of the article half of ~/sumi/quartz.css (the visual-explainers shell): same
+ * palette, same fonts, same title block, same code-block and inline-code treatment. The
+ * sidebars, glossary, and typing-practice bits are left out because a re-rendered article
+ * doesn't have them. If the sumi theme changes, port the change here by hand; the add-on
+ * can't read ~/sumi at runtime.
+ *
+ * Every colour pair here clears WCAG (Web Content Accessibility Guidelines) AA contrast
+ * comfortably, which is the whole reason this add-on exists: body #2b2b2b on #faf8f8 is ~13:1,
+ * links #284b63 on #faf8f8 is ~9:1.
+ */
+
+/* Only the Latin subset is bundled (same as sumi). Other scripts fall through to the system
+   font in the stack below, which is why the stacks keep -apple-system etc. after the names. */
+@font-face {
+  font-family: "Hanken Grotesk";
+  font-style: normal;
+  font-weight: 100 900;
+  src: url(fonts/hanken-grotesk-normal-100-900.woff2) format("woff2");
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  font-style: italic;
+  font-weight: 100 900;
+  src: url(fonts/hanken-grotesk-italic-100-900.woff2) format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  src: url(fonts/jetbrains-mono-normal-100-800.woff2) format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: italic;
+  font-weight: 100 800;
+  src: url(fonts/jetbrains-mono-italic-100-800.woff2) format("woff2");
+}
+
+:root {
+  --q-light: #faf8f8;
+  --q-lightgray: #e5e5e5;
+  --q-gray: #b8b8b8;
+  --q-darkgray: #4e4e4e;
+  --q-dark: #2b2b2b;
+  --q-secondary: #284b63;
+  --q-tertiary: #84a59d;
+  --q-highlight: rgba(143, 159, 169, 0.15);
+  --q-body: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --q-code: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --q-side: 300px;
+  /* The explainers are designed for an ~850px column; this is the one knob to turn if
+     re-rendered prose feels too wide or narrow. */
+  --sr-column: 850px;
+  /* Always light, like the explainers. Stops Firefox from darkening form controls/scrollbars
+     when the OS is in dark mode. */
+  color-scheme: light;
+}
+
+html, body { margin: 0; background: var(--q-light); }
+body { color: var(--q-dark); font-family: var(--q-body); font-size: 17px; }
+
+#sr-root {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--q-side);
+  max-width: calc(var(--sr-column) + var(--q-side) + 5rem);
+  margin: 0 auto;
+  min-height: 100vh;
+}
+#sr-center { min-width: 0; padding: 3rem 2.5rem 6rem; box-sizing: border-box; }
+
+/* ---------- breadcrumb row ---------- */
+.sr-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.92rem; margin-bottom: 1.2rem; }
+.sr-crumbs a { color: var(--q-secondary); text-decoration: none; }
+.sr-crumbs a:hover { color: var(--q-tertiary); }
+.sr-crumbs .sr-sep { color: var(--q-gray); }
+
+/* ---------- title block (matches the explainer header) ---------- */
+#sr-article header { margin-bottom: 2rem; }
+#sr-article header h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 0.4rem; letter-spacing: -0.015em; font-weight: 800; }
+.sr-meta { margin: 0 0 0.5rem; color: var(--q-darkgray); font-size: 0.92rem; }
+
+/* ---------- article body ---------- */
+#sr-article { line-height: 1.6; overflow-wrap: break-word; }
+#sr-content h1, #sr-content h2, #sr-content h3, #sr-content h4, #sr-content h5, #sr-content h6 {
+  color: var(--q-dark); line-height: 1.25; margin: 2rem 0 0.75rem; font-weight: 700;
+}
+#sr-content h1 { font-size: 1.75rem; }
+#sr-content h2 { font-size: 1.5rem; }
+#sr-content h3 { font-size: 1.25rem; }
+#sr-content h4, #sr-content h5, #sr-content h6 { font-size: 1.05rem; }
+#sr-content p, #sr-content ul, #sr-content ol, #sr-content dl { margin: 0 0 1rem; }
+#sr-content li { margin: 0.25rem 0; }
+#sr-content a { color: var(--q-secondary); text-decoration: underline; text-decoration-color: var(--q-gray); text-underline-offset: 2px; }
+#sr-content a:hover { color: var(--q-tertiary); }
+#sr-content img, #sr-content video, #sr-content picture { max-width: 100%; height: auto; border-radius: 6px; }
+#sr-content figure { margin: 1.5rem 0; }
+#sr-content figcaption { color: var(--q-darkgray); font-size: 0.88rem; margin-top: 0.4rem; }
+#sr-content hr { border: 0; border-top: 1px solid var(--q-lightgray); margin: 2rem 0; }
+#sr-content blockquote {
+  margin: 1rem 0; padding: 0.25rem 1rem; color: var(--q-darkgray);
+  border-left: 3px solid var(--q-secondary); background: var(--q-highlight); border-radius: 0 6px 6px 0;
+}
+#sr-content ::selection { background: #fff23688; }
+
+/* Code, Quartz-style: bordered white block with a hover Copy button; inline code as a soft pill. */
+#sr-content code, #sr-content pre, #sr-content kbd, #sr-content samp { font-family: var(--q-code); }
+#sr-content pre {
+  position: relative; overflow-x: auto;
+  background: #fff; color: var(--q-dark);
+  border: 1px solid var(--q-lightgray); border-radius: 7px;
+  padding: 0.85rem 1rem; margin: 1rem 0;
+  font-size: 0.85rem; line-height: 1.6; white-space: pre;
+}
+#sr-content :not(pre) > code {
+  background: var(--q-highlight); border-radius: 5px; padding: 0.1rem 0.3rem; font-size: 0.88em;
+}
+.sr-copy {
+  position: absolute; top: 0.45rem; right: 0.45rem;
+  font: 500 0.72rem var(--q-body); color: var(--q-darkgray);
+  background: var(--q-light); border: 1px solid var(--q-lightgray); border-radius: 5px;
+  padding: 0.2rem 0.5rem; cursor: pointer; opacity: 0; transition: opacity 0.15s;
+}
+#sr-content pre:hover .sr-copy { opacity: 1; }
+.sr-copy:hover { color: var(--q-secondary); border-color: var(--q-gray); }
+
+/* Tables get their own horizontal scroll (reader.js wraps them) instead of widening the page. */
+.sr-table-wrap { overflow-x: auto; margin: 1rem 0; }
+#sr-content table { border-collapse: collapse; font-size: 0.92rem; min-width: 50%; }
+#sr-content th, #sr-content td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--q-lightgray); text-align: left; vertical-align: top; }
+#sr-content th { font-weight: 700; border-bottom-color: var(--q-gray); }
+
+#sr-content [id] { scroll-margin-top: 1rem; }
+
+/* ---------- right sidebar: table of contents ---------- */
+#sr-right { padding: 3rem 1.5rem; box-sizing: border-box; }
+#sr-right h3 { font-size: 1rem; margin: 0 0 0.6rem; color: var(--q-dark); }
+/* The heading and list scroll together as one sticky box; the list scrolls on its own if long. */
+.sr-toc-box { position: sticky; top: 1.5rem; }
+#sr-toc { list-style: none; margin: 0; padding: 0; max-height: calc(100vh - 6rem); overflow-y: auto; }
+#sr-toc li { margin: 0.3rem 0; font-size: 0.9rem; line-height: 1.35; }
+#sr-toc li.sr-l3 a { padding-left: 1rem; }
+#sr-toc a { display: block; color: var(--q-darkgray); text-decoration: none; }
+#sr-toc a:hover { color: var(--q-tertiary); }
+#sr-toc a.sr-inview { color: var(--q-secondary); font-weight: 600; }
+#sr-right.sr-empty { visibility: hidden; }
+
+/* Narrow windows: drop the TOC, it would squeeze the article. */
+@media (max-width: 1100px) {
+  #sr-root { grid-template-columns: minmax(0, 1fr); max-width: calc(var(--sr-column) + 5rem); }
+  #sr-right { display: none; }
+}
+@media (max-width: 600px) {
+  #sr-center { padding: 1.5rem 1.1rem 4rem; }
+  #sr-article header h1 { font-size: 1.6rem; }
+}
+
+/* Error state shown when the stored article is gone (e.g. Firefox restarted). */
+.sr-error { color: var(--q-darkgray); }

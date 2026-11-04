@@ -1,0 +1,43 @@
+<!doctype html>
+<!--
+  Sumi Reader — the page the article is re-rendered into.
+  Layout mirrors the explainer shell: centred article column, table of contents on the right
+  on wide windows. Everything is filled in by reader.js from the article parked in
+  storage.session by background.js.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Referrer off: article images load from the original site, and there's no reason to
+       tell it a moz-extension:// page asked. -->
+  <meta name="referrer" content="no-referrer">
+  <title>Sumi Reader</title>
+  <link rel="stylesheet" href="reader.css">
+</head>
+<body>
+  <div id="sr-root">
+    <main id="sr-center">
+      <nav class="sr-crumbs">
+        <a id="sr-back" href="#">← back to page</a>
+        <span class="sr-sep">/</span>
+        <a id="sr-site" href="#"></a>
+      </nav>
+      <article id="sr-article">
+        <header>
+          <h1 id="sr-title"></h1>
+          <p class="sr-meta" id="sr-meta"></p>
+        </header>
+        <div id="sr-content"></div>
+      </article>
+    </main>
+    <aside id="sr-right">
+      <div class="sr-toc-box">
+        <h3>Table of Contents</h3>
+        <ol id="sr-toc"></ol>
+      </div>
+    </aside>
+  </div>
+  <script src="reader.js"></script>
+</body>
+</html>
