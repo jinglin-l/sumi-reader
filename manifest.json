@@ -1,30 +1,52 @@
 {
   "manifest_version": 2,
   "name": "Sumi Reader",
-  "version": "1.0.0",
-  "description": "Re-renders the current page as a clean, high-contrast article in the sumi explainer theme. Works offline and makes no network requests.",
+  "version": "1.1.0",
+  "description": "Press q to re-render a site as a clean, high-contrast article in the sumi explainer theme. Remembered per site, off by default, no data collection.",
   "browser_specific_settings": {
     "gecko": {
       "id": "sumi-reader@local",
       "strict_min_version": "142.0",
       "data_collection_permissions": {
-        "required": ["none"]
+        "required": [
+          "none"
+        ]
       }
     }
   },
-  "permissions": ["activeTab", "storage"],
+  "permissions": [
+    "storage"
+  ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "vendor/Readability.js",
+        "extract.js",
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
   "browser_action": {
-    "default_title": "Read in sumi style (Alt+Shift+R)",
+    "default_title": "Sumi Reader: toggle this site (q)",
     "default_icon": "icon.svg"
   },
   "commands": {
     "_execute_browser_action": {
-      "suggested_key": { "default": "Alt+Shift+R" },
-      "description": "Toggle sumi reader on the current tab"
+      "suggested_key": {
+        "default": "Alt+Shift+R"
+      },
+      "description": "Toggle sumi reader for this site (same as q)"
     }
   },
   "icons": {

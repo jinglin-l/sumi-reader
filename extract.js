@@ -1,16 +1,18 @@
 /*
- * Sumi Reader — extraction, injected into the page being read.
+ * Sumi Reader — extraction, loaded as a content script on every page.
  *
- * Runs in the page's content-script sandbox right after vendor/Readability.js, and its final
- * expression is the value handed back to background.js. That value must survive structured
- * cloning across processes, so it is plain strings only: no DOM nodes.
+ * Defines sumiExtract(), which content.js calls when the page should be re-rendered. It shares
+ * the content-script scope with vendor/Readability.js (listed before it in the manifest). The
+ * returned object is sent to background.js by message, so it must survive structured cloning:
+ * plain strings only, no DOM nodes.
  *
  * Readability (the same engine behind Firefox's built-in Reader View) does the hard part:
  * scoring blocks to find the main article and dropping nav, ads, and comments. We add a
  * fallback for pages it gives up on, because the point of this add-on is "make this page
  * legible", and a slightly noisy page is better than an error.
  */
-(() => {
+// eslint-disable-next-line no-unused-vars -- called from content.js
+function sumiExtract() {
   // Readability mutates the document it is given, so it gets a clone. Cloning keeps the
   // document's URL, which Readability needs to turn relative links/images into absolute ones
   // (they would otherwise resolve against moz-extension:// on the reader page).
@@ -69,4 +71,4 @@
       textContent: body.textContent,
     };
   }
-})();
+}

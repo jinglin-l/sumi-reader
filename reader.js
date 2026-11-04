@@ -21,13 +21,13 @@
   const stored = await browser.storage.session.get(key);
   const article = stored[key];
 
-  wireBackButton();
+  wireLeaving(article, tabId);
 
   if (!article) {
     // storage.session is memory-only, so this happens after a Firefox restart restores the tab.
     document.getElementById("sr-title").textContent = "Nothing to show";
     document.getElementById("sr-content").innerHTML =
-      '<p class="sr-error">The saved article is gone (Firefox was probably restarted). Go back and press the Sumi Reader button again.</p>';
+      '<p class="sr-error">The saved article is gone (Firefox was probably restarted). Go back and press q again.</p>';
     document.getElementById("sr-right").classList.add("sr-empty");
     return;
   }
@@ -252,15 +252,45 @@ function buildToc(root) {
 
 /* ---------------------------------------------------------------- leaving */
 
-// "Back to page" link and Esc both return to the original page via history, which restores
-// it from the back-forward cache instead of reloading it.
-function wireBackButton() {
-  const back = (e) => {
+// Two ways out, matching the per-site on/off model in background.js:
+//   q (or the toolbar button)  switch this site off, then go back to the original.
+//   Esc / "back to page"       peek at the original once; the site stays on, so the next page
+//                              you open on it re-renders again. background.js gets a
+//                              "skip once" note first, otherwise the original would
+//                              re-render itself the moment it loads.
+// Both use history.back(), which restores the original from the back-forward cache instead of
+// reloading it when it can.
+function wireLeaving(article, tabId) {
+  const url = article ? article.url : "";
+
+  if (article) browser.runtime.sendMessage({ type: "readerOpened", tabId, url });
+
+  const peek = async (e) => {
     if (e) e.preventDefault();
+    if (article) await browser.runtime.sendMessage({ type: "skipOnce", tabId, url });
     history.back();
   };
-  document.getElementById("sr-back").addEventListener("click", back);
+
+  const switchOff = async () => {
+    if (!article) return history.back();
+    const on = await browser.runtime.sendMessage({ type: "toggleSite", tabId, url });
+    // toggleSite flips the state. If the site was somehow already off (switched off from
+    // another tab), it just got switched back on; flip again so q always means "off" here.
+    if (on) await browser.runtime.sendMessage({ type: "toggleSite", tabId, url });
+    history.back();
+  };
+
+  document.getElementById("sr-back").addEventListener("click", peek);
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !e.ctrlKey && !e.metaKey && !e.altKey) back(e);
+    if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+    if (e.key === "Escape") peek(e);
+    else if (e.key === "q") switchOff();
+  });
+
+  // Toolbar button / Alt+Shift+R, broadcast by background.js. Every extension page hears every
+  // runtime message (including content scripts' autoCheck), so filter by type and tab, and
+  // return nothing: returning a value would answer messages meant for background.js.
+  browser.runtime.onMessage.addListener((msg) => {
+    if (msg.type === "pressQ" && String(msg.tabId) === String(tabId)) switchOff();
   });
 }

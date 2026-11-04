@@ -30,7 +30,13 @@
     </aside>
   </div>
 <script>
-window.browser = { storage: { session: { get: async (k) => ({ [k]: JSON.parse(localStorage.getItem("article")) }) } } };
+window.SENT = [];
+window.browser = {
+  storage: { session: { get: async (k) => ({ [k]: JSON.parse(localStorage.getItem("article")) }) } },
+  // Records what reader.js sends; toggleSite answers "now off", like background.js would
+  // for a site that was on.
+  runtime: { sendMessage: async (m) => { SENT.push(m.type); return m.type === "toggleSite" ? false : true; }, onMessage: { addListener: () => {} } },
+};
 </script>
 <script src="../reader.js"></script>
 <script src="../doodles.js"></script>

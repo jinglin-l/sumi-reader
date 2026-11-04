@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- Test fixture: a deliberately unreadable page (grey-on-grey, tiny thin font, sidebar
+     clutter) used to check that Sumi Reader extracts the article and throws away the styling. -->
+<html><head><meta charset="utf-8"><title>Why grey text on grey backgrounds fails | Example Blog</title>
+<meta name="author" content="Test Author">
+<script src="fake-browser.js"></script>
+<script src="../background.js"></script>
+<script>FAKE.bgDone()</script>
+<script src="../vendor/Readability.js"></script>
+<script src="../extract.js"></script>
+<script src="../content.js"></script>
+<style>
+ body{background:#777;color:#666;font:200 11px/1.2 Georgia;}
+ .side{position:fixed;right:0;width:200px;background:#555;color:#5a5a5a}
+ h1,h2{color:#707070}
+</style></head>
+<body>
+<nav>home · about · subscribe · login</nav>
+<div class="side">ADVERTISEMENT buy stuff now <a href="/promo">promo</a></div>
+<article>
+<input id="box" placeholder="type here">
+<h1>Why grey text on grey backgrounds fails</h1>
+<p style="color:#6b6b6b">Contrast ratio is the relative luminance of the lighter colour plus 0.05, divided by the darker one plus 0.05. Text at <code>#666</code> on <code>#777</code> scores about 1.2:1, far under the 4.5:1 that body text needs. This paragraph is long enough that Readability should treat it as real content rather than boilerplate, which is what we want to verify here.</p>
+<h2 id="measure">Measuring it</h2>
+<p>Use the formula on each channel after linearising sRGB values. See <a href="#fix">the fix section</a> or <a href="/docs/contrast">the docs page</a>. Designers often pick low contrast because it looks calm in a mockup, but on a real screen in daylight the words disappear entirely.</p>
+<pre><code>L = 0.2126*R + 0.7152*G + 0.0722*B
+ratio = (L1 + 0.05) / (L2 + 0.05)</code></pre>
+<img src="/img/chart.png" alt="chart" onerror="window.__xss=1" style="border:5px solid red">
+<h3>A table</h3>
+<table><tr><th>pair</th><th>ratio</th></tr><tr><td>#666 on #777</td><td>1.2</td></tr><tr><td>#2b2b2b on #faf8f8</td><td>13.4</td></tr></table>
+<h2 id="fix">The fix</h2>
+<p>Darken the text or lighten the background until the ratio clears 4.5:1, and avoid thin font weights at small sizes, since thin strokes reduce perceived contrast further. <a href="javascript:alert(2)">evil link</a> should lose its href.</p>
+<script>document.title += ""</script>
+</article>
+<footer>© 2026 example · cookies · terms</footer>
+</body></html>
