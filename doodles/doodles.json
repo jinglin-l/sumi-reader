@@ -1,0 +1,21 @@
+[
+  { "name": "mug", "rot": 6 },
+  { "name": "bee", "rot": -5 },
+  { "name": "flower", "rot": 5 },
+  { "name": "onigiri", "rot": -6 },
+  { "name": "sprigs", "rot": -8 },
+  { "name": "mushroom", "rot": 7 },
+  { "name": "sun", "rot": -7 },
+  { "name": "fish", "rot": 4 },
+  { "name": "rocket", "rot": 10 },
+  { "name": "egg", "rot": -6 },
+  { "name": "ufo", "rot": 6 },
+  { "name": "bread", "rot": -4 },
+  { "name": "jellyfish", "rot": -5 },
+  { "name": "bird", "rot": 6 },
+  { "name": "bulb", "rot": -6 },
+  { "name": "bus", "rot": 4 },
+  { "name": "jellyfish-2", "rot": 5 },
+  { "name": "camera", "rot": 5 },
+  { "name": "dog", "rot": -4 }
+]

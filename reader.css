@@ -64,8 +64,8 @@ body { color: var(--q-dark); font-family: var(--q-body); font-size: 17px; }
 
 #sr-root {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--q-side);
-  max-width: calc(var(--sr-column) + var(--q-side) + 5rem);
+  grid-template-columns: var(--q-side) minmax(0, 1fr) var(--q-side);
+  max-width: calc(var(--sr-column) + 2 * var(--q-side) + 5rem);
   margin: 0 auto;
   min-height: 100vh;
 }
@@ -135,27 +135,53 @@ body { color: var(--q-dark); font-family: var(--q-body); font-size: 17px; }
 #sr-content [id] { scroll-margin-top: 1rem; }
 
 /* ---------- right sidebar: table of contents ---------- */
-#sr-right { padding: 3rem 1.5rem; box-sizing: border-box; }
+/* Both sidebars are one window tall and sticky, like the shell's, so the space below their
+   contents stays put while the article scrolls; doodles.js measures that space. */
+#sr-left, #sr-right { position: sticky; top: 0; height: 100vh; box-sizing: border-box; }
+#sr-right { padding: 3rem 1.5rem; }
 #sr-right h3 { font-size: 1rem; margin: 0 0 0.6rem; color: var(--q-dark); }
-/* The heading and list scroll together as one sticky box; the list scrolls on its own if long. */
-.sr-toc-box { position: sticky; top: 1.5rem; }
-#sr-toc { list-style: none; margin: 0; padding: 0; max-height: calc(100vh - 6rem); overflow-y: auto; }
+/* A long TOC scrolls on its own, capped at ~half the window so there's usually room for doodles. */
+#sr-toc { list-style: none; margin: 0; padding: 0; max-height: 50vh; overflow-y: auto; }
 #sr-toc li { margin: 0.3rem 0; font-size: 0.9rem; line-height: 1.35; }
 #sr-toc li.sr-l3 a { padding-left: 1rem; }
 #sr-toc a { display: block; color: var(--q-darkgray); text-decoration: none; }
 #sr-toc a:hover { color: var(--q-tertiary); }
 #sr-toc a.sr-inview { color: var(--q-secondary); font-weight: 600; }
-#sr-right.sr-empty { visibility: hidden; }
+/* display:none (not visibility) so doodles.js sees an empty sidebar and uses all of it. */
+#sr-right.sr-empty .sr-toc-box { display: none; }
 
-/* Narrow windows: drop the TOC, it would squeeze the article. */
+/* Narrow windows: drop both sidebars (TOC and doodles), they would squeeze the article. */
 @media (max-width: 1100px) {
   #sr-root { grid-template-columns: minmax(0, 1fr); max-width: calc(var(--sr-column) + 5rem); }
-  #sr-right { display: none; }
+  #sr-left, #sr-right { display: none; }
 }
 @media (max-width: 600px) {
   #sr-center { padding: 1.5rem 1.1rem 4rem; }
   #sr-article header h1 { font-size: 1.6rem; }
 }
+
+/* ---------- margin doodles (laid out by doodles.js) ----------
+   Copied from the doodle block in ~/sumi/quartz.css with q- renamed to sr-. */
+.sr-doodles { position: fixed; z-index: 1; overflow: hidden; pointer-events: none; display: none; }
+.sr-doodles.sr-on { display: block; }
+/* Fade the top edge so a doodle scrolling under the TOC dissolves instead of being sliced. */
+.sr-doodles { -webkit-mask-image: linear-gradient(transparent, #000 48px); mask-image: linear-gradient(transparent, #000 48px); }
+.sr-doodle-track { position: absolute; top: 0; left: 0; right: 0; will-change: transform; }
+.sr-doodle {
+  position: absolute; display: inline-block; line-height: 0; pointer-events: auto;
+  color: var(--q-darkgray); opacity: 0.7; transform: rotate(var(--rot, 0deg)); transition: opacity 0.2s ease;
+}
+.sr-doodle:hover { opacity: 1; }
+.sr-doodle .doodle-svg { display: block; height: auto; overflow: visible; }
+/* Each path has pathLength="1" and its own --dur/--delay, so hover replays the original stroke order. */
+.sr-doodle path { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.sr-doodle:hover path { animation: sr-redraw var(--dur) linear var(--delay) both; }
+@keyframes sr-redraw {
+  0% { opacity: 0; stroke-dashoffset: 1; }
+  1% { opacity: 1; stroke-dashoffset: 1; }
+  100% { opacity: 1; stroke-dashoffset: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .sr-doodle:hover path { animation: none; } }
 
 /* Error state shown when the stored article is gone (e.g. Firefox restarted). */
 .sr-error { color: var(--q-darkgray); }
