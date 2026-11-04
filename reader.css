@@ -150,10 +150,16 @@ body { color: var(--q-dark); font-family: var(--q-body); font-size: 17px; }
 /* display:none (not visibility) so doodles.js sees an empty sidebar and uses all of it. */
 #sr-right.sr-empty .sr-toc-box { display: none; }
 
-/* Narrow windows: drop both sidebars (TOC and doodles), they would squeeze the article. */
-@media (max-width: 1100px) {
+/* Narrowing windows shed sidebars in order of usefulness: first the left one (doodles only),
+   so the table of contents stays on the right as long as possible, then the TOC itself once
+   it would squeeze the article below a comfortable reading width. */
+@media (max-width: 1300px) {
+  #sr-root { grid-template-columns: minmax(0, 1fr) var(--q-side); max-width: calc(var(--sr-column) + var(--q-side) + 5rem); }
+  #sr-left { display: none; }
+}
+@media (max-width: 900px) {
   #sr-root { grid-template-columns: minmax(0, 1fr); max-width: calc(var(--sr-column) + 5rem); }
-  #sr-left, #sr-right { display: none; }
+  #sr-right { display: none; }
 }
 @media (max-width: 600px) {
   #sr-center { padding: 1.5rem 1.1rem 4rem; }
