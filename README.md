@@ -6,4 +6,4 @@ how it works: background.js injects vendor/Readability.js (mozilla's reader view
 
 permissions: activeTab and storage. there's no data collection. article images still load from the original site.
 
-test: `python3 -m http.server 8765` here, open test/fixture.html, then see the steps in test/reader-test.html.
+test: test/fixture.html is a deliberately low-contrast page. to check rendering outside firefox, serve this folder, run vendor/Readability.js and extract.js on the fixture, save the result to localStorage as `article`, and open test/reader-test.html, which stubs `browser.storage.session`.
