@@ -1,3 +1,5 @@
-some sites use fonts and colours so faint that i can't read them, so this firefox add-on re-renders the page as a clean, high-contrast article in the sumi explainer theme whenever i press q.
+some websites have fonts and contrast so rough that they're unreadable for me, so this firefox add-on re-renders them as a clean, easy-to-read page in the sumi explainer theme whenever i press q.
 
-![sumi reader rendering an article](screenshot.png)
+| before | after |
+| --- | --- |
+| ![danluu.com/web-bloat as the site shows it](before.png) | ![the same article re-rendered by sumi reader](after.png) |

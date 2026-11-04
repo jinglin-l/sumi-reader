@@ -225,10 +225,14 @@ function buildToc(root) {
   }
   const list = document.getElementById("sr-toc");
   const links = new Map();
+  // Indent relative to the article's own top level, not to a fixed h2: many sites (this
+  // project's README screenshot of danluu.com included) use only h3s, and indenting all of
+  // them would leave the whole list hanging off a parent that doesn't exist.
+  const hasH2 = heads.some((h) => h.localName === "h2");
   heads.forEach((h, i) => {
     if (!h.id) h.id = `sr-h-${i}`;
     const li = document.createElement("li");
-    li.className = h.localName === "h3" ? "sr-l3" : "sr-l2";
+    li.className = hasH2 && h.localName === "h3" ? "sr-l3" : "sr-l2";
     const a = document.createElement("a");
     a.href = `#${h.id}`;
     a.textContent = h.textContent.trim();
