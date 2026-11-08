@@ -1,4 +1,4 @@
-some websites have fonts and contrast so rough that they're unreadable for me, so this firefox add-on re-renders them as a clean, easy-to-read page in the sumi explainer theme whenever i press q.
+ a firefox add-on that re-renders text-based sites into easy-to-read pages
 
 | before | after |
 | --- | --- |
